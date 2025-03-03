@@ -21,33 +21,46 @@ close all
 clear all
 clc
 
-order = 3;
+order = 5;
 nRuns = 5000;
 
-
-gridSize = 6;
+gridSize = 21;
 gridMin = -1.2;
 gridMax = 1.2;
 
-
+cMap = hot(4);
 r = zeros(nRuns, order);
-
-x = linspace(-1, 1, gridSize);
+rColor = zeros(nRuns, 3);
+nOrbit = zeros(nRuns, 1);
+x = linspace(gridMin, gridMax, gridSize);
 for n = 1:nRuns
   while 1
+    p = x(randi([1, gridSize], 1, order + 1));
     valid = 1;
-    p = x(randi([1, gridSize], 1, order+1));
-    rTmp = roots(p);
+    rColor(n, :) = [0.5, 0.5, 1.0];
     
     % INVALID CASE 1: leading coefficient is too small
-    if (abs(p(1)) < 0.01)
+    if (abs(p(1)) < 0.001)
+      %fprintf('[INFO] Skipping polynomial with weak leading coefficient\n');
       valid = 0;
     end
     
     % INVALID CASE 2: multiple roots
+    rTmp = roots(p);
     if (length(rTmp) < order)
+      %fprintf('[INFO] Skipping multiple roots\n');
       valid = 0;
-      sprintf('Double root found! \n');
+    end
+    
+    for k = 1:4
+      nFixed = countFixedPoints(p,k);
+      if nFixed > nOrbit(n)
+        nOrbit(n) = k;
+      end
+    end
+    
+    if (nOrbit(n) > 0)
+      rColor(n,:) = cMap(nOrbit(n), :);
     end
     
     if (valid == 1)
@@ -57,14 +70,7 @@ for n = 1:nRuns
   end
 end
 
-cMap = jet(nRuns);
-c = zeros(order*nRuns, 2);
-for n = 1:nRuns
-  for o = 1:order
-    c((n-1)*order + o, 1) = r(n, order);
-    c((n-1)*order + o, 2) = cMap(n);
-  end
-end
-scatter(real(c(:,1)), imag(c(:,1)), 1, c(:,2));
+
+scatter(real(r(:)), imag(r(:)), [], kron(rColor, ones(order,1)), '.')
 grid minor
 
