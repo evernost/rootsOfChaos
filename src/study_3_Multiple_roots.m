@@ -25,51 +25,70 @@ clc
 % SETTINGS
 % -----------------------------------------------------------------------------
 
-nRuns = 10000000;
+nRuns = 10000;
 order = 2;
+orbitSize = 4;
+
+nTries = 10000;
 
 for n = 1:nRuns
-  p = -1.0 + 2.0*rand(1,3);
+  
+  % Draw a polynomial with random coefficients
+  p = -1.0 + 2.0*rand(1, order+1);
+  dp = polyder(p);
   
   found = 0;
-  x = linspace(-1,1,1000);
+  yBounds = [-1.0, 1.0];
+  x = linspace(-1.0, 1.0, nTries);
   y = x;
-  for m = 1:order
+  for m = 1:orbitSize
+    yBounds = polyval(p, yBounds);
     y = polyval(p,y);
+    eq = y - x;
     
-    z = y-x;
+    % -------------------------------------------------------------------------
+    % ITERATIONS BEFORE THE TARGET ORBIT
+    % -------------------------------------------------------------------------
+    if (m < orbitSize)
+      % Look for a fixed point
+      if (yBounds(1)*yBounds(2) < 0)
+        signChange = find(eq(1:end-1) .* eq(2:end) < 0);
+        if ~isempty(signChange)
+          for k = 1:length(signChange)
+            x0 = x(signChange(k));
+
+            % The m-th iterate (m < orbitSize) can have a fixed point, but it
+            % must not be stable.
+            % If it is: discard the polynomial.
+            if (abs(polyval(dp,x0)) < 1.0)
+              found = -1;
+              break;
+            end
+          end
+        end
+      end
     
-    if (m < order)
-      if (all(z > 0) || all(z < 0))
-        found = 0;
+    % -------------------------------------------------------------------------
+    % ORBIT ITERATION
+    % -------------------------------------------------------------------------
+    else  
+      % When iterated 'orbitSize' times, the polynomial must have a fixed
+      % point.
+      % If it doesn't: discard the polynomial.
+      if (yBounds(1)*yBounds(2) < 0)
+        if (found ~= -1)
+          found = 1;
+        end
       else
-        break;
+        found = -1;
       end
-    else
-      if (all(z > 0) || all(z < 0))
-        %plot(z)
-        %grid minor
-        found = 0;
-      else
-        found = 1;
-      end
+      
     end
+      
+      
+      
+      
   end
   
-  if (found == 1)
-    x = linspace(-1.0, 1.0, 1000);
-    y = x;
-    for m = 1:order
-      y = polyval(p,y);
-      plot(x',y',x',x')
-      title(num2str(m))
-      ylim([-1 1])
-      grid minor
-    end
-    plot(x',y',x',x')
-    grid minor
-    ylim([-1 1])
-    disp('found')
 
-  end
 end
