@@ -24,12 +24,14 @@ clc
 % -----------------------------------------------------------------------------
 % SETTINGS
 % -----------------------------------------------------------------------------
-
-nRuns = 10000;
+nRuns = 100000;
 order = 2;
-orbitSize = 4;
+orbitSize = 10;
 
 nTries = 10000;
+
+nFound = 0;
+pList = zeros(1, order+1);
 
 for n = 1:nRuns
   
@@ -37,58 +39,77 @@ for n = 1:nRuns
   p = -1.0 + 2.0*rand(1, order+1);
   dp = polyder(p);
   
-  found = 0;
-  yBounds = [-1.0, 1.0];
-  x = linspace(-1.0, 1.0, nTries);
-  y = x;
+  % Status variable
+  % - '-1': solutions, but not stable
+  % -  '0': no solution at all
+  % -  '1': solution found!
+  status = 0;
+  
+  x = linspace(-1.0, 1.0, nTries); y = x;
   for m = 1:orbitSize
-    yBounds = polyval(p, yBounds);
     y = polyval(p,y);
-    eq = y - x;
+    
+    [z, zDeriv, zInd, nFix] = fixedPointAnalysis(p, x, y);
     
     % -------------------------------------------------------------------------
     % ITERATIONS BEFORE THE TARGET ORBIT
     % -------------------------------------------------------------------------
     if (m < orbitSize)
-      % Look for a fixed point
-      if (yBounds(1)*yBounds(2) < 0)
-        signChange = find(eq(1:end-1) .* eq(2:end) < 0);
-        if ~isempty(signChange)
-          for k = 1:length(signChange)
-            x0 = x(signChange(k));
+      
+      % The m-th iterate (m < orbitSize) can have a fixed point, but it
+      % must not be stable.
+      % If it is: discard the polynomial.
+      for k = 1:nFix
+        s = 1; x0 = z(k);
+        for t = 1:m
+          s = s*abs(polyval(dp,x0));
+          x0 = polyval(p,x0);
+        end
+      
+        % Any stable fixed point here invalidates the candidate 
+        % polynomial
+        if (s < 1.0)
+          status = -1;
+          break;
+        end
+      end
+      
+    % -------------------------------------------------------------------------
+    % LAST ITERATION (TOTAL ORBIT)
+    % -------------------------------------------------------------------------
+    else
+    
+      % When iterated 'orbitSize' times, the polynomial must have 1 and only 
+      % 1 stable fixed point.
+      if (nFix == 0)
+        status = -1;
+      
+      else
+        if (status ~= -1)
+          for k = 1:nFix
+            s = 1; x0 = z(k);
+            for t = 1:nFix
+              s = s*abs(polyval(dp,x0));
+              x0 = polyval(p,x0);
+            end
+            
+            % Stable fixed point found!
+            if (s < 1.0)
+              status = 1;
+              
+              % TODO: show coefficients with more precision
+              fprintf('[INFO] Found! p = \n');
+              disp(p);
 
-            % The m-th iterate (m < orbitSize) can have a fixed point, but it
-            % must not be stable.
-            % If it is: discard the polynomial.
-            if (abs(polyval(dp,x0)) < 1.0)
-              found = -1;
-              break;
+              nFound = nFound + 1;
+              pList(nFound, :) = p;
             end
           end
         end
       end
-    
-    % -------------------------------------------------------------------------
-    % ORBIT ITERATION
-    % -------------------------------------------------------------------------
-    else  
-      % When iterated 'orbitSize' times, the polynomial must have a fixed
-      % point.
-      % If it doesn't: discard the polynomial.
-      if (yBounds(1)*yBounds(2) < 0)
-        if (found ~= -1)
-          found = 1;
-        end
-      else
-        found = -1;
-      end
-      
     end
-      
-      
-      
-      
   end
-  
-
 end
+
+% Plot the solutions
+%plot(
