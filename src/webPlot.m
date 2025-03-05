@@ -1,22 +1,50 @@
-close all
-clear all
-clc
+% =============================================================================
+% Project       : rootsOfChaos
+% Module name   : webPlot
+% File name     : webPlot.m
+% Purpose       : cobweb plot of a polynomial recursion
+% Author        : QuBi (nitrogenium@hotmail.com)
+% Creation date : Wednesday, 05 March 2025
+% -----------------------------------------------------------------------------
+% Best viewed with space indentation (2 spaces)
+% =============================================================================
+%
+% DESCRIPTION
+% Plots the polynomial 'p' evaluated on the vector 'x'.
+% At the same time, the plot shows the web plot of a recursive map 
+% with polynomial 'p' in the recurrence relation.
+% 'xInit' defines the start point, 'n' the number of iterations.
+%
+% Arguments:
+% - x     [1*nPts]  : the range on which the polynomial 'p' will be evaluated
+% - p     [1*pSize] : any polynomial
+% - xInit [1*1]     : starting point
+% - n     [1*1]     : how many iterations
+%
+% Outputs:
+% None.
+%
+
+% TODO: generalise to other kind of functions
 
 
-nPts = 10000;
+function webPlot(p, x, xInit, n)
+  
+  y = polyval(p,x);
 
-%p = [-0.7321, -0.9382, 0.8783];    % 4th order solution
-%p = [0.9383, -0.9925, -0.9446];    % 5th order solution
-%p = [0.8840, -0.9449, -0.9945];    % 7th order solution
-%p = [0.9733, -0.8416, -0.9843];    % 9th order solution (but struggles to converge)
-p = [-0.9348, -0.9496, 0.7439];    % 10th order
-xInit = 0.01;
-
-x = zeros(nPts, 1);
-x(1) = xInit;
-for n = 2:nPts
-  x(n) = polyval(p,(x(n-1)));
+  figure
+  plot(x,y, x,x)
+  grid minor
+  
+  u = xInit; v = polyval(p, xInit);
+  line([u, u], [0, v], 'Color', 'k');
+  line([u, v], [v, v], 'Color', 'k');
+  
+  for iter = 1:n
+    u = xInit; v = polyval(p, u);
+    line([u, u], [u, v], 'Color', 'k');
+    line([u, v], [v, v], 'Color', 'k');
+  end
+  
 end
 
-plot(x)
-grid minor

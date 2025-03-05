@@ -1,5 +1,5 @@
 % =============================================================================
-% Project       : rootsAndChaos
+% Project       : rootsOfChaos
 % Module name   : study_3_Multiple_roots
 % File name     : study_3_Multiple_roots.m
 % File type     : Matlab script
