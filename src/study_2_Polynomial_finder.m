@@ -1,9 +1,9 @@
 % =============================================================================
 % Project       : rootsOfChaos
-% Module name   : study_3_Multiple_roots
-% File name     : study_3_Multiple_roots.m
+% Module name   : study_2_Polynomial_finder
+% File name     : study_2_Polynomial_finder.m
 % File type     : Matlab script
-% Purpose       : 
+% Purpose       : hunt for polynomials giving a certain period when recursed
 % Author        : QuBi (nitrogenium@outlook.fr)
 % Creation date : Sunday, 02 March 2025
 % -----------------------------------------------------------------------------
@@ -15,6 +15,9 @@
 % -----------------------------------------------------------------------------
 % TODO
 
+
+% TODO: show a proper results summary
+
 close all
 clear all
 clc
@@ -24,11 +27,11 @@ clc
 % -----------------------------------------------------------------------------
 % SETTINGS
 % -----------------------------------------------------------------------------
-nRuns = 100000;
+nRuns = 500000;
 order = 2;
-orbitSize = 10;
+orbitSize = 13;
 
-nTries = 10000;
+nTries = 100000;
 
 nFound = 0;
 pList = zeros(1, order+1);
@@ -97,10 +100,19 @@ for n = 1:nRuns
             if (s < 1.0)
               status = 1;
               
-              % TODO: show coefficients with more precision
-              fprintf('[INFO] Found! p = \n');
-              disp(p);
-
+              % Display results
+              fprintf('[INFO] Solution %d: p = ', nFound+1);
+              for u = 1:(order+1)
+                fprintf('%0.8f ', p(u));
+              end
+              
+              r = roots(p);
+              fprintf(' - Roots: ');
+              for u = 1:length(r)
+                fprintf('(%f, %f) ', real(r(u)), imag(r(u)));
+              end
+              fprintf('\n');
+              
               nFound = nFound + 1;
               pList(nFound, :) = p;
             end
@@ -110,6 +122,12 @@ for n = 1:nRuns
     end
   end
 end
+
+% Sort the solutions according to the leading term of the polynomial
+[~, idx] = sort(pList(:,1),1);
+solutions = pList(idx,:);
+
+
 
 % Plot the solutions
 %plot(

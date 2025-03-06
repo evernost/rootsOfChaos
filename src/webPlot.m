@@ -25,7 +25,9 @@
 % None.
 %
 
-% TODO: generalise to other kind of functions
+% TODO: generalise to other kind of functions (not just polynomials)
+% TODO: generate 'x' within the function, adjust it automatically based on
+%       the histogram
 
 
 function webPlot(p, x, xInit, n)
@@ -41,7 +43,7 @@ function webPlot(p, x, xInit, n)
   line([u, v], [v, v], 'Color', 'k');
   
   for iter = 1:n
-    u = xInit; v = polyval(p, u);
+    u = v; v = polyval(p, u);
     line([u, u], [u, v], 'Color', 'k');
     line([u, v], [v, v], 'Color', 'k');
   end
