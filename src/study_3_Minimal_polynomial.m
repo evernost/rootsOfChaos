@@ -26,7 +26,7 @@ clc
 % SETTINGS
 % -----------------------------------------------------------------------------
 nTarget = 30;
-orbitSize = 7;
+orbitSize = 5;
 
 gridSize = 50000;
 g = linspace(-1.0, 1.0, gridSize);
@@ -36,25 +36,26 @@ g = linspace(-1.0, 1.0, gridSize);
 % FIRST APPROACH: RANDOM
 % -----------------------------------------------------------------------------
 nSol = 0;
+orbits = zeros(nTarget, orbitSize);
+pSol = zeros(nTarget, orbitSize+1);
 while (nSol < nTarget)
   
-  % Draw a random orbit (+ 1 extra control point to tune the stability)
-  u = g(randperm(gridSize, orbitSize + 1));
+  % Draw a random orbit
+  orbit = g(randperm(gridSize, orbitSize));
   
-  % Draw a random regularisation
-  lambda = 0.9*(-1 + 2*rand);
+  % Solve
+  p = orbitSolver(orbit);
   
-  M = vander(u);
-  x = [u(2:(end-1)), u(1), lambda].';
-  
-  v = M \ x;
-  
-  if (abs(v(1)) < 0.01) && (abs(v(2)) < 0.1)
-    disp('Found!')
-    p = v.';
-    nSol = nSol + 1;
+  if (~isempty(p))
+    if (abs(p(1)) < 3.0)
+      nSol = nSol + 1;
+      disp('Found!')
+      pSol(nSol, :) = p
+      orbits(nSol, :) = orbit;
+    else
+      fprintf('[INFO] Stable solution, but leading term = %0.2f\n', p(1));
+    end
   end
-  
 end
   
   
