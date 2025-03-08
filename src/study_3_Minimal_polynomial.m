@@ -37,7 +37,8 @@ g = linspace(-1.0, 1.0, gridSize);
 % -----------------------------------------------------------------------------
 nSol = 0;
 orbits = zeros(nTarget, orbitSize);
-pSol = zeros(nTarget, orbitSize+1);
+pSol = zeros(nTarget, orbitSize);
+fprintf('[INFO] Looking for solutions...\n');
 while (nSol < nTarget)
   
   % Draw a random orbit
@@ -47,13 +48,13 @@ while (nSol < nTarget)
   p = orbitSolver(orbit);
   
   if (~isempty(p))
-    if (abs(p(1)) < 3.0)
+    if (abs(p(1)) < 0.001)
       nSol = nSol + 1;
-      disp('Found!')
+      fprintf('[INFO] Solution found: %0.2f\n', p(1));
       pSol(nSol, :) = p
       orbits(nSol, :) = orbit;
     else
-      fprintf('[INFO] Stable solution, but leading term = %0.2f\n', p(1));
+      %fprintf('[INFO] Stable solution, but leading term = %0.2f\n', p(1));
     end
   end
 end
