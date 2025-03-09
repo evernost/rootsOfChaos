@@ -1,3 +1,24 @@
+% =============================================================================
+% Project       : rootsOfChaos
+% Module name   : fixedPointAnalysis
+% File name     : fixedPointAnalysis.m
+% Purpose       : TODO
+% Author        : QuBi (nitrogenium@hotmail.com)
+% Creation date : Sunday, 09 March 2025
+% -----------------------------------------------------------------------------
+% Best viewed with space indentation (2 spaces)
+% =============================================================================
+%
+% DESCRIPTION
+% TODO
+% 
+% Arguments:
+% TODO
+%
+% Outputs:
+% TODO
+%
+
 function [z, zDeriv, zInd, nFix] = fixedPointAnalysis(p, x, y)
   dp = polyder(p);
   eq = y - x;

@@ -13,10 +13,13 @@
 % -----------------------------------------------------------------------------
 % DESCRIPTION
 % -----------------------------------------------------------------------------
-% TODO
-
-
-% TODO: show a proper results summary
+% This script tries to find polynomials containing a specific cycle length.
+% Only stable orbits are considered as valid solutions.
+%
+% The order of the candidate polynomials can be adjusted.
+%
+% Solutions are based on root finding in high order polynomials, so results
+% might be inaccurate for high cycle lengths.
 
 close all
 clear all
@@ -27,16 +30,20 @@ clc
 % -----------------------------------------------------------------------------
 % SETTINGS
 % -----------------------------------------------------------------------------
-nRuns = 500000;
-order = 2;
-orbitSize = 13;
+orbitSize = 4;     % Target orbit size
+nSolutions = 10;   % Desired number of solutions
 
-nTries = 100000;
+order = 2;        % Max order for the polynomial solution
 
+nPts = 10000;
+
+
+% -----------------------------------------------------------------------------
+% SEARCH LOOP
+% -----------------------------------------------------------------------------
 nFound = 0;
 pList = zeros(1, order+1);
-
-for n = 1:nRuns
+while(nFound < nSolutions)
   
   % Draw a polynomial with random coefficients
   p = -1.0 + 2.0*rand(1, order+1);
@@ -48,7 +55,7 @@ for n = 1:nRuns
   % -  '1': solution found!
   status = 0;
   
-  x = linspace(-1.0, 1.0, nTries); y = x;
+  x = linspace(-1.0, 1.0, nPts); y = x;
   for m = 1:orbitSize
     y = polyval(p,y);
     
@@ -115,6 +122,7 @@ for n = 1:nRuns
               
               nFound = nFound + 1;
               pList(nFound, :) = p;
+              break;
             end
           end
         end
@@ -127,6 +135,14 @@ end
 [~, idx] = sort(pList(:,1),1);
 solutions = pList(idx,:);
 
+
+% -----------------------------------------------------------------------------
+% EMPIRICAL PERIOD ESTIMATION
+% -----------------------------------------------------------------------------
+% Use xcorr:
+% - first peak is always the signal correlated with itself at 0 lag
+% - second highest peak relative to the first peak gives the most plausible
+%   period (depends on the observation window)
 
 
 % Plot the solutions

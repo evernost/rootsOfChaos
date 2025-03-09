@@ -22,20 +22,25 @@
 
 function orbitalTweak(p, orbit)
   
+  N_TRIES = 5000000;
+
   orbitSize = length(orbit);
 
   orbitNew = orbit;
   pNew = p;
-  for n = 1:10000
-    orbitTest = orbitNew + 0.0001*(-1+2*rand(1, orbitSize));
+  eList = zeros(N_TRIES,1);
+  w = 2.^(linspace(4,0,orbitSize-3));
+  for n = 1:N_TRIES
+    orbitTest = orbitNew + 0.001*(-1+2*rand(1, orbitSize));
     pTest = orbitSolver(orbitTest);
     
     if ~isempty(pTest)
-      eTest = sum(abs(pTest(1:(orbitSize-3))));
-      eNew = sum(abs(pNew(1:(orbitSize-3))));
+      eTest = sum(abs(pTest(1:(orbitSize-3)) .* w));
+      eNew  = sum(abs(pNew(1:(orbitSize-3)) .* w));
       if (eTest < eNew)
         orbitNew = orbitTest;
         pNew = pTest;
+        eList(n) = eNew;
         %fprintf('[INFO] New score: %0.5f\n', eTest)
       end
     end
@@ -43,4 +48,8 @@ function orbitalTweak(p, orbit)
 
   orbitNew
   pNew
+
+  plot(eList)
+  grid on
+  grid minor
 end

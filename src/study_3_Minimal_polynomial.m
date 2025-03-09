@@ -35,7 +35,7 @@ clc
 % -----------------------------------------------------------------------------
 % SETTINGS
 % -----------------------------------------------------------------------------
-orbitSize = 8;   % Target orbit size
+orbitSize = 4;   % Target orbit size
 nSolutions = 5;  % Desired number of solutions
 
 gridSize = 10000;
@@ -59,7 +59,7 @@ while (nFound < nSolutions)
   p = orbitSolver(orbit);
   
   if (~isempty(p))
-    if (abs(p(1)) < 1.0)
+    if (abs(p(1)) < 0.001)
       nFound = nFound + 1;
       fprintf('[INFO] Solution found: %0.2f\n', p(1));
       pSol(nFound, :) = p
