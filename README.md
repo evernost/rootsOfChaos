@@ -1,7 +1,16 @@
 # rootsOfChaos
 A study on polynomial recursions, the roots of specific polynomials, and their link with chaos in recurrent maps.
 
-# The idea
+## The goal
+Non-linear recursions can have **periodic** behaviours. 
+
+Usually, there is a degree of freedom, a parameter. Changing this parameter will give a different behaviour, eventually another periodic oscillation but with a different cycle length.
+
+However, it rarely changes from one cycle to another as the parameter changes monotonically. 
+
+Are there parametrised polynomials out there that would provide a 2-cycle, then a 3-cycle, 4-cycle, etc. as the parameter increases?
+
+## The non-linear recursion
 Take any number you like, apply any function `f` to it, you get a new number.
 
 With this number, you can repeat the process and apply `f` again.
@@ -38,7 +47,7 @@ Then a few questions came to my mind, that I wanted to investigate:
 - is there a *smooth* way to interpolate through the cyclic behaviour? Like a single parameter to go from a 1-cycle, 2-cycle, 3-cycle, etc.? 
 
 
-# First approach: the brutal approach
+## Enforcing a cycle: the brutal approach
 Assuming the recursion is done using a polynomial, imposing a cycle can be done by solving the equations:
 - f(a) = b
 - f(b) = c
@@ -52,29 +61,42 @@ A cycle of length `n` requires `n` equations, so a polynomial of order `n-1` wou
 
 It works, but it also give massive polynomials. Let's go for another approach.
 
-# Second approach: the polynomial sieve
+## What periods are hidden in second order polynomials?
 Let's generate polynomials with random coefficients.
 
-The coefficients are chosen on a grid to be less messy. 
+The coefficients are chosen on a grid, so that the possible values taken by the coeffients are less "messy". 
 
-Then, we check whether it contains a defined cycle value.
+Then, we check whether it contains a defined cycle value. Solutions are stored. 
 
 
-
-# Third approach: finding the minimal polynomial
-The second approach made me realise that a basic 2nd order polynomial has all the potential to generate pretty much any cycle length. At least, that is my intuition based on a few empirical observations; nothing rigourous here.
+## Finding the minimal polynomial
+As I tried to enforce a cycle brutally, I realised that a basic 2nd order polynomial has all the potential to generate pretty much any cycle length. At least, that is my intuition based on a few empirical observations; nothing rigourous here.
 
 In the first part, I was able to generate any cycle length but that would imply very large polynomials. Meanwhile, a carefully-selected second order polynomial can contain massive cycles. 
 
 The catch in the brutal approach is that it imposes not only the cycle length, but also the cycle itself, which is absolutely overkill. But the degree of freedom is now the orbit of the cycle that I am free to build the way I want.
 
 The order of the polynomial can be huge, but it might be reduced with a carefully-chosen orbit. After all, a 256 cycle of the logistic map may well be a 256-order polynomial, but the trajectory is such that it killed the terms of the polynomial all the way to the second!
+
+- [ ] If there is a polynomial solving a given orbit, is there a *golden* way to tweak the orbit (even slightly) so that there is still a stable solution, and for which there could even be leading terms in the polynomials that get cancelled?
+
+[TODO]
+
+## *Optimal transport* between polynomials 
+For a given cycle length and a given order (usually 2nd order, since it seems to contain every period), there are usually several polynomial solving for it. To answer the initial question, we must now:
+- find *the proper candidate* for each cycle length
+- find *the proper way* to transition from one candidate to the other
+- define what we mean by "*the proper*"...
+
+
+[TODO]
  
-# Project status
+## Project status
 This project does not have any specific goal. I just go with the flow, following what the experiment inspire me.
 
-# TODO
+## TODO
 - [ ] Do a similar study with piecewise linear recursions (even simpler!)
-
+- [ ] Find a *right* way to interpolate between polynomials 
+- [ ] Find a *right* way to classify polynomials containing the same cycle length
 
 
