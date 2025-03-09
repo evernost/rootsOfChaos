@@ -4,7 +4,7 @@
 % File name     : orbitSolver.m
 % Purpose       : tries to find a polynomial with a given orbit property
 % Author        : QuBi (nitrogenium@hotmail.com)
-% Creation date : Friday, 07 February 2025
+% Creation date : Friday, 07 March 2025
 % -----------------------------------------------------------------------------
 % Best viewed with space indentation (2 spaces)
 % =============================================================================
@@ -24,19 +24,10 @@
 % - p [1*(N-1)] : the polynomial satisfying the orbit condition
 %
 
-
-
 function p = orbitSolver(orbit)
 
-  %MAX_TRIES = 5000;
   orbitSize = length(orbit);
-  
-  %for nTry = 1:MAX_TRIES
-  
-  % Draw a random regularisation (derivative on one of the control points)
-  %regLoc = randi([1 orbitSize]);
-  %regValue = 0.9*(-1 + 2*rand);
-  
+    
   % Form the equation matrix
   M = vander(orbit);
   y = [orbit(2:end), orbit(1)].';
@@ -56,10 +47,7 @@ function p = orbitSolver(orbit)
     %fprintf('[INFO] Stable solution found!\n');
     return
   end
-  
-  %end
-  
-  %fprintf('[WARNING] Could not find a stable solution for the requested orbit.\n')
+
   p = [];
 
 end
