@@ -84,6 +84,7 @@ The order of the polynomial can be huge, but it might be reduced with a carefull
 
 ## *Optimal transport* between polynomials 
 For a given cycle length and a given order (usually 2nd order, since it seems to contain every period), there are usually several polynomial solving for it. To answer the initial question, we must now:
+- make sure that candidates have a *real* own cycle length (e.g. some 3-cycles have an orbit really close to a 2-cycle)
 - find *the proper candidate* for each cycle length
 - find *the proper way* to transition from one candidate to the other
 - define what we mean by "*the proper*"...
@@ -98,5 +99,7 @@ This project does not have any specific goal. I just go with the flow, following
 - [ ] Do a similar study with piecewise linear recursions (even simpler!)
 - [ ] Find a *right* way to interpolate between polynomials 
 - [ ] Find a *right* way to classify polynomials containing the same cycle length
+- [ ] Define a norm to measure distance between orbits, and make sure an orbit of length N doesn't look *to close* from an orbit of shorter length M < N
+- [ ] Find a way to generate bandlimited signal from the periodic patterns of the map
 
 
