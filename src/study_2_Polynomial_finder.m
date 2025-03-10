@@ -30,7 +30,7 @@ clc
 % -----------------------------------------------------------------------------
 % SETTINGS
 % -----------------------------------------------------------------------------
-orbitSize = 4;     % Target orbit size
+orbitSize = 6;     % Target orbit size
 nSolutions = 10;   % Desired number of solutions
 
 order = 2;        % Max order for the polynomial solution
@@ -144,6 +144,10 @@ solutions = pList(idx,:);
 % - second highest peak relative to the first peak gives the most plausible
 %   period (depends on the observation window)
 
+% TODO
 
-% Plot the solutions
-%plot(
+% -----------------------------------------------------------------------------
+% PLOT THE ROOT LOCUS OF THE SOLUTIONS
+% -----------------------------------------------------------------------------
+
+% TODO

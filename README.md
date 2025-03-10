@@ -99,7 +99,8 @@ This project does not have any specific goal. I just go with the flow, following
 - [ ] Do a similar study with piecewise linear recursions (even simpler!)
 - [ ] Find a *right* way to interpolate between polynomials 
 - [ ] Find a *right* way to classify polynomials containing the same cycle length
-- [ ] Define a norm to measure distance between orbits, and make sure an orbit of length N doesn't look *to close* from an orbit of shorter length M < N
+- [ ] Define a norm to measure distance between orbits, and make sure an orbit of length N doesn't look *to close* from an orbit of shorter length M < N (use circular correlation?)
+- [ ] Add a 0-mean constraint to the orbits (or close to) to avoid DC component
 - [ ] Find a way to generate bandlimited signal from the periodic patterns of the map
 
 
