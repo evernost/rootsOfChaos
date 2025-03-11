@@ -16,18 +16,18 @@
 % - ...
 % - p[x(N)] = x(1)
 % 
+% Note: use the 'orbitStability' function to check if the solution is
+%       stable.
 %
-% Arguments:
+% ARGUMENTS
 % - orbit [1*N] : list of points defining the cycle
 %
-% Outputs:
+% OUTPUTS
 % - p [1*(N-1)] : the polynomial satisfying the orbit condition
 %
 
-function p = orbitSolver(orbit)
-
-  orbitSize = length(orbit);
-    
+function [p, condNumber] = orbitSolver(orbit)
+  
   % Form the equation matrix
   M = vander(orbit);
   y = [orbit(2:end), orbit(1)].';
@@ -36,19 +36,7 @@ function p = orbitSolver(orbit)
   x = M \ y;
   p = x.';
   
-  % Measure the orbit stability
-  %dp = polyder(p);
-  dp = ((orbitSize-1):-1:1) .* p(1:(end-1));
-  s = 1;
-  for n = 1:orbitSize
-    s = s*polyval(dp, orbit(n));
-  end
-
-  if (abs(s) < 1.0)
-    %fprintf('[INFO] Stable solution found!\n');
-    return
-  end
-
-  p = [];
-
+  % Return the condition number
+  condNumber = cond(M);
+  
 end
