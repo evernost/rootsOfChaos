@@ -101,6 +101,6 @@ This project does not have any specific goal. I just go with the flow, following
 - [ ] Find a *right* way to classify polynomials containing the same cycle length
 - [ ] Define a norm to measure distance between orbits, and make sure an orbit of length N doesn't look *to close* from an orbit of shorter length M < N (use circular correlation?)
 - [ ] Add a 0-mean constraint to the orbits (or close to) to avoid DC component
+- [ ] Add an amplitude constraint to avoid massive jumps when interpolating from one polynomial to the other
+- [ ] On the way to stabilisation/reduction, show how the polynomial (and its roots?) evolves
 - [ ] Find a way to generate bandlimited signal from the periodic patterns of the map
-
-

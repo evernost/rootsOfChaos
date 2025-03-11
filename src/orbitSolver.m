@@ -37,7 +37,8 @@ function p = orbitSolver(orbit)
   p = x.';
   
   % Measure the orbit stability
-  dp = polyder(p);
+  %dp = polyder(p);
+  dp = ((orbitSize-1):-1:1) .* p(1:(end-1));
   s = 1;
   for n = 1:orbitSize
     s = s*polyval(dp, orbit(n));

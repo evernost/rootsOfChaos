@@ -35,13 +35,13 @@ clc
 % -----------------------------------------------------------------------------
 % SETTINGS
 % -----------------------------------------------------------------------------
-orbitSize = 4;   % Target orbit size
+orbitSize = 15;   % Target orbit size
 nSolutions = 5;  % Desired number of solutions
 
-gridSize = 10000;
-g = linspace(-1.0, 1.0, gridSize);
+%gridSize = 100000;
+%g = linspace(-1.0, 1.0, gridSize);
 
-
+orbitRange = [-2.0 2.0];
 
 % -----------------------------------------------------------------------------
 % MAIN LOOP
@@ -53,13 +53,19 @@ fprintf('[INFO] Looking for solutions...\n');
 while (nFound < nSolutions)
   
   % Draw a random orbit
-  orbit = g(randperm(gridSize, orbitSize));
+  while 1
+    orbit = orbitRange(1) + (orbitRange(2) - orbitRange(1))*rand(1, orbitSize);
+    distSort = sort(diff(sort(orbit,2)),2);
+    if (distSort(1) >= (1.0-(-1.0))/(2*orbitSize))
+      break
+    end
+  end
   
   % Solve
   p = orbitSolver(orbit);
   
   if (~isempty(p))
-    if (abs(p(1)) < 0.001)
+    if (abs(p(1)) < 1000.001)
       nFound = nFound + 1;
       fprintf('[INFO] Solution found: %0.2f\n', p(1));
       pSol(nFound, :) = p
@@ -67,6 +73,8 @@ while (nFound < nSolutions)
     else
       %fprintf('[INFO] Stable solution, but leading term = %0.2f\n', p(1));
     end
+  else
+    orbitalTweakStability(p, orbit);
   end
 end
   
