@@ -28,23 +28,28 @@ function [orbitNew, pNew] = orbitStabilizer(orbit)
   orbitNew = orbit;
   pNew = [];
   
-  %M = vander(orbit);
-  condMax = 1e4;
-  
-  eList = zeros(N_TRIES,1);
   orbitSize = length(orbit);
-  step = 10.^-(logspace(-3,-5,N_TRIES));
+
+  condMax = 10^(1.38 + orbitSize/2);
+  eList = zeros(N_TRIES,1);  
+  step = 10.^-(logspace(-1,-5,N_TRIES));
   sMin = Inf;
   for n = 1:N_TRIES    
     
     % Tune the orbit a bit, but keep it well defined
+    condAttempts = 1;
     while 1
+      
+      % TODO: wrong! the step must change only if a good result is obtained
       orbitTest = orbitNew + step(n)*(-1+2*rand(1, orbitSize));
       
       % Detect ill-conditioned orbit
       M = vander(orbit);
       if cond(M) < condMax
+        %fprintf('[INFO] Proper matrix found (attempts = %d, cond = %0.1f)\n', condAttempts, cond(M))
         break
+      else
+        condAttempts = condAttempts + 1;
       end
     end
     
@@ -57,23 +62,20 @@ function [orbitNew, pNew] = orbitStabilizer(orbit)
       orbitNew = orbitTest;
       eList(n) = abs(s);
       sMin = abs(s);
-      fprintf('[INFO] New s: %0.5f\n', sMin)
+      fprintf('[INFO] s = %0.5f\n', sMin)
       
       if (abs(s) < 1.0)
-        fprintf('[INFO] Stable solution found!\n')
+        fprintf('[INFO] Stable solution found! s = %0.5f, cond(M) = %0.3f\n', s, cond(M))
+        fprintf('- s = %0.5f\n', s)
+        fprintf('- cond(M) = %0.2f\n', cond(M))
+        fprintf('- attempts = %d\n', n)
+        fprintf('\n')
         return
       end
     end
   
   end
   
-  fprintf('[WARNING] orbitStabilizer: stable solution could be found (timeout)\n')
+  warning('a stable solution could not be found (too many attempts)\n')
   
-
-  %orbitNew
-  %pNew
-
-  %plot(eList)
-  %grid on
-  %grid minor
 end

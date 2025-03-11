@@ -35,7 +35,7 @@ clc
 % -----------------------------------------------------------------------------
 % SETTINGS
 % -----------------------------------------------------------------------------
-orbitSize = 9;   % Target orbit size
+orbitSize = 19;   % Target orbit size
 nSolutions = 5;   % Desired number of solutions
 
 orbitRange = [-2.0 2.0];
@@ -63,7 +63,8 @@ while (nFound < nSolutions)
   % Try to find a stable solution 
   [orbitStable, p] = orbitStabilizer(orbit);
 
-
+  % Try to minimise the polynomial
+  % ...
 
 end
   

@@ -26,7 +26,7 @@
 % - p [1*(N-1)] : the polynomial satisfying the orbit condition
 %
 
-function [p, condNumber] = orbitSolver(orbit)
+function p = orbitSolver(orbit)
   
   % Form the equation matrix
   M = vander(orbit);
@@ -35,8 +35,5 @@ function [p, condNumber] = orbitSolver(orbit)
   % Solve for the polynomial
   x = M \ y;
   p = x.';
-  
-  % Return the condition number
-  condNumber = cond(M);
-  
+
 end
