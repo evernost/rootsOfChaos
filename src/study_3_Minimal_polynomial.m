@@ -35,7 +35,7 @@ clc
 % -----------------------------------------------------------------------------
 % SETTINGS
 % -----------------------------------------------------------------------------
-orbitSize = 14;   % Target orbit size
+orbitSize = 17;   % Target orbit size
 nSolutions = 5;   % Desired number of solutions
 
 orbitRange = [-2.0 2.0];
@@ -54,8 +54,8 @@ while (nFound < nSolutions)
   % Draw a random orbit
   while 1
     orbit = orbitRange(1) + (orbitRange(2) - orbitRange(1))*rand(1, orbitSize);
-    distSort = sort(diff(sort(orbit,2)),2);
-    if (distSort(1) >= 0.01)
+    
+    if (orbitMinDistance(orbit) >= 0.01)
       break
     end
   end
@@ -63,8 +63,13 @@ while (nFound < nSolutions)
   % Try to find a stable solution 
   [orbitStable, p] = orbitStabilizer(orbit);
 
-  % Try to minimise the polynomial
-  % ...
+  % Optimize the polynomial in terms of:
+  % - order (for eventual high order quantization)
+  % - mean value of the orbit
+  % - normalized amplitude
+  if ~isempty(p)
+    disp('')
+  end
 
 end
   

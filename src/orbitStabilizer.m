@@ -24,6 +24,7 @@ function [orbitNew, pNew] = orbitStabilizer(orbit)
   % Maximum number of stabilisation attempts before giving up
   N_TRIES = 500000;
   
+  % Number of step length in the random walk
   N_STEPS = 50;
 
   % Outputs
@@ -32,7 +33,8 @@ function [orbitNew, pNew] = orbitStabilizer(orbit)
   
   orbitSize = length(orbit);
 
-  condMax = 10^(1.3 + orbitSize/2);  % Empirical, based on study_5
+  %condMax = 10^(1.6 + orbitSize/2);  % Empirical, based on study_5.
+  condMax = 1e10;
 
   eList = zeros(N_TRIES,1);  
   %step = 10.^-(logspace(-1,-5,N_TRIES));
@@ -43,22 +45,29 @@ function [orbitNew, pNew] = orbitStabilizer(orbit)
   for n = 1:N_TRIES    
     
     % Tune the orbit a bit, but keep it well defined
-    condAttempts = 1;
+    condAttempts = 0; condAcc = 0;
     while 1
-      
-      % TODO: wrong! the step must change only if a good result is obtained
       orbitTest = orbitNew + step(stepIndex)*(-1+2*rand(1, orbitSize));
       
       % Detect ill-conditioned orbit
-      M = vander(orbit);
-      if (cond(M) < condMax)
+      M = vander(orbitTest);
+      condM = cond(M);
+      if (condM < condMax)
         break
       else
         condAttempts = condAttempts + 1;
+        condAcc = condAcc + condM;
       end
+      
+      if (condAttempts > 1000)
+        fprintf('[ERROR] Target condition number seems unreachable. You should consider adjust it.\n');
+        fprintf('Observed average condition number: %5e (target: %5e)\n', condAcc/condAttempts, condMax);
+        error('Condition number failed to converge.')
+      end
+      
     end
     
-    pTest = orbitSolver(orbit);
+    pTest = orbitSolver(orbitTest);
     
     % Measure stability
     s = orbitStability(orbitTest, pTest);
@@ -77,11 +86,12 @@ function [orbitNew, pNew] = orbitStabilizer(orbit)
       fprintf('[INFO] s = %0.5f - step = %0.5f\n', sMin, step(stepIndex))
       
       if (abs(s) < 1.0)
-        fprintf('[INFO] Stable solution found! s = %0.5f, cond(M) = %0.3f\n', s, cond(M))
+        fprintf('[INFO] Stable solution found!\n')
         fprintf('- s = %0.5f\n', s)
-        fprintf('- cond(M) = %0.2f\n', cond(M))
+        fprintf('- orbit span = %0.3f ... %0.3f\n', min(orbitNew), max(orbitNew))
+        fprintf('- min orbital distance = %0.2f\n', orbitMinDistance(orbitNew))
+        fprintf('- cond(M) = %0.2f\n', condM)
         fprintf('- attempts = %d\n', n)
-        fprintf('- min orbital distance = TODO\n')
         fprintf('\n')
         return
       end

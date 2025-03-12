@@ -1,12 +1,12 @@
 # rootsOfChaos
-A study on polynomial recursions, the roots of specific polynomials, and their link with chaos in recurrent maps.
+A study on polynomial recursions, the root locus of specific polynomials, and their link with chaos in recurrent maps.
 
 ## The goal
 Non-linear recursions can have **periodic** behaviours. 
 
-Usually, there is a degree of freedom, a parameter. Changing this parameter will give a different behaviour, eventually another periodic oscillation but with a different cycle length.
+Usually, they are built with a degree of freedom, a parameter. Changing this parameter will give a different behaviour, eventually another periodic oscillation but with a different cycle length.
 
-However, it rarely changes from one cycle to another as the parameter changes monotonically. 
+However, the cycle length has no reason to change e.g. linearly or even monotonically as the parameter increases. 
 
 Are there parametrised polynomials out there that would provide a 2-cycle, then a 3-cycle, 4-cycle, etc. as the parameter increases?
 
@@ -24,7 +24,7 @@ The operation is simple enough, yet it can yield very deep results. Some of whic
 Here are a few examples with different functions and different sets of numbers:
 - `f` is a **linear function** defined on **real numbers**: either converges unconditionally, diverges, or oscillates between 2 values (see: arithmetico-geometric sequence)
 - `f` is a **linear function** defined on **integers**: the behaviour is not always certain (see the Collatz conjecture https://en.wikipedia.org/wiki/Collatz_conjecture)
-- `f` is a **linear function** defined on **modular integers (Z/pZ)**: a cool example is the Linear congruential Generator (LCG) which is the interger version of the arithmetico-geometric sequence. Used for pseudo-random number generation, though it needs specific conditions on the coefficients for decent results, and they are far from obvious (https://en.wikipedia.org/wiki/Linear_congruential_generator)
+- `f` is a **linear function** defined on **modular integers (Z/pZ)**: a cool example is the Linear congruential Generator (LCG) which is the integer version of the arithmetico-geometric sequence. Used for pseudo-random number generation, though it needs specific conditions on the coefficients for decent results, and they are far from obvious (https://en.wikipedia.org/wiki/Linear_congruential_generator)
 - `f` is a 2nd order polynomial defined on **real numbers**: the logistic map
 - `f` is a 2nd order polynomial defined on **complex numbers**: the Mandelbrot set (which has deep connexions with the logistic map)
 
@@ -33,7 +33,7 @@ In this study, I'm mostly interested in the logistic map because it's probably t
 Behind its apparent simplicity in the definition, the logistic mapping exhibits very differents behaviours depending on a single parameter (and the initial value to a lesser extent)
 - divergence
 - convergence to a single value
-- periodic oscillations, with various possible periods
+- periodic oscillations, with various possible cycle length
 - erratic, random-like values
 
 In particular, the periodic pattern is quite cool. 
@@ -76,7 +76,7 @@ In the first part, I was able to generate any cycle length but that would imply 
 
 The catch in the brutal approach is that it imposes not only the cycle length, but also the cycle itself, which is absolutely overkill. But the degree of freedom is now the orbit of the cycle that I am free to build the way I want.
 
-The order of the polynomial can be huge, but it might be reduced with a carefully-chosen orbit. After all, a 256 cycle of the logistic map may well be a 256-order polynomial, but the trajectory is such that it killed the terms of the polynomial all the way to the second!
+The order of the polynomial can be huge, but it might be reduced with a carefully-chosen orbit. After all, a 256 cycle of the logistic map may well be a 256-order polynomial, but the trajectory is such that it killed the terms of the polynomial all the way to the second.
 
 - [ ] If there is a polynomial solving a given orbit, is there a *golden* way to tweak the orbit (even slightly) so that there is still a stable solution, and for which there could even be leading terms in the polynomials that get cancelled?
 
@@ -89,13 +89,14 @@ For a given cycle length and a given order (usually 2nd order, since it seems to
 - find *the proper way* to transition from one candidate to the other
 - define what we mean by "*the proper*"...
 
+[TODO]
 
 ## Link between orbits of different sizes
 As the orbit size gets higher in value, it becomes much harder to find a polynomial containing this cycle. 
 
-The coefficients required have very little flexibility and a small deviation can easily demote the solution to a *degenerated* version with a lower cycle (e.g. in reduction, where coefficients are forced to 0 when they were not close enough)
+The coefficients required have very little flexibility and a small deviation can easily demote the solution to a *degenerated* version with a lower cycle length (e.g. in reduction, where coefficients are quantized to 0 when they were not close enough)
 
-But this shows that some cycles are actually connected. If improper precision can lead to a smaller cycle, it also means that a proper tuning could achieve a higher cycle.
+But this also shows that some cycles are actually connected. If improper precision can lead to a smaller cycle, a proper tuning could achieve a higher cycle.
 
 
 [TODO]
