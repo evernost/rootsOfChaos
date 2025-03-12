@@ -37,5 +37,8 @@ function s = orbitStability(orbit, p)
   s = 1;
   for m = 1:orbitSize
     s = s*polyval(dp, orbit(m));
+    % if abs(s) > 100
+    %   break
+    % end
   end
 end

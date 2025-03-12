@@ -35,7 +35,7 @@ clc
 % -----------------------------------------------------------------------------
 % SETTINGS
 % -----------------------------------------------------------------------------
-orbitSize = 19;   % Target orbit size
+orbitSize = 14;   % Target orbit size
 nSolutions = 5;   % Desired number of solutions
 
 orbitRange = [-2.0 2.0];
@@ -55,7 +55,7 @@ while (nFound < nSolutions)
   while 1
     orbit = orbitRange(1) + (orbitRange(2) - orbitRange(1))*rand(1, orbitSize);
     distSort = sort(diff(sort(orbit,2)),2);
-    if (distSort(1) >= 0.1)
+    if (distSort(1) >= 0.01)
       break
     end
   end

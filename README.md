@@ -90,6 +90,14 @@ For a given cycle length and a given order (usually 2nd order, since it seems to
 - define what we mean by "*the proper*"...
 
 
+## Link between orbits of different sizes
+As the orbit size gets higher in value, it becomes much harder to find a polynomial containing this cycle. 
+
+The coefficients required have very little flexibility and a small deviation can easily demote the solution to a *degenerated* version with a lower cycle (e.g. in reduction, where coefficients are forced to 0 when they were not close enough)
+
+But this shows that some cycles are actually connected. If improper precision can lead to a smaller cycle, it also means that a proper tuning could achieve a higher cycle.
+
+
 [TODO]
  
 ## Project status
@@ -104,3 +112,5 @@ This project does not have any specific goal. I just go with the flow, following
 - [ ] Add an amplitude constraint to avoid massive jumps when interpolating from one polynomial to the other
 - [ ] On the way to stabilisation/reduction, show how the polynomial (and its roots?) evolves
 - [ ] Find a way to generate bandlimited signal from the periodic patterns of the map
+- [ ] Is there a way to derive orbits of size 2N from orbits of size N? They seem 'close' in a polynomial sense
+

@@ -24,15 +24,21 @@ function [orbitNew, pNew] = orbitStabilizer(orbit)
   % Maximum number of stabilisation attempts before giving up
   N_TRIES = 500000;
   
+  N_STEPS = 50;
+
   % Outputs
   orbitNew = orbit;
   pNew = [];
   
   orbitSize = length(orbit);
 
-  condMax = 10^(1.38 + orbitSize/2);
+  condMax = 10^(1.3 + orbitSize/2);  % Empirical, based on study_5
+
   eList = zeros(N_TRIES,1);  
-  step = 10.^-(logspace(-1,-5,N_TRIES));
+  %step = 10.^-(logspace(-1,-5,N_TRIES));
+  %step = logspace(-1,-5,N_STEPS);
+  step = logspace(0,-4,N_STEPS);
+  stepIndex = 1;
   sMin = Inf;
   for n = 1:N_TRIES    
     
@@ -41,12 +47,11 @@ function [orbitNew, pNew] = orbitStabilizer(orbit)
     while 1
       
       % TODO: wrong! the step must change only if a good result is obtained
-      orbitTest = orbitNew + step(n)*(-1+2*rand(1, orbitSize));
+      orbitTest = orbitNew + step(stepIndex)*(-1+2*rand(1, orbitSize));
       
       % Detect ill-conditioned orbit
       M = vander(orbit);
-      if cond(M) < condMax
-        %fprintf('[INFO] Proper matrix found (attempts = %d, cond = %0.1f)\n', condAttempts, cond(M))
+      if (cond(M) < condMax)
         break
       else
         condAttempts = condAttempts + 1;
@@ -59,16 +64,24 @@ function [orbitNew, pNew] = orbitStabilizer(orbit)
     s = orbitStability(orbitTest, pTest);
   
     if (abs(s) < sMin)
+      
+      % Register the solution
       orbitNew = orbitTest;
-      eList(n) = abs(s);
+      pNew = pTest;
       sMin = abs(s);
-      fprintf('[INFO] s = %0.5f\n', sMin)
+      
+      % Adjust step
+      stepIndex = min(N_STEPS, stepIndex+1);
+
+      eList(n) = abs(s);
+      fprintf('[INFO] s = %0.5f - step = %0.5f\n', sMin, step(stepIndex))
       
       if (abs(s) < 1.0)
         fprintf('[INFO] Stable solution found! s = %0.5f, cond(M) = %0.3f\n', s, cond(M))
         fprintf('- s = %0.5f\n', s)
         fprintf('- cond(M) = %0.2f\n', cond(M))
         fprintf('- attempts = %d\n', n)
+        fprintf('- min orbital distance = TODO\n')
         fprintf('\n')
         return
       end
@@ -76,6 +89,6 @@ function [orbitNew, pNew] = orbitStabilizer(orbit)
   
   end
   
-  warning('a stable solution could not be found (too many attempts)\n')
+  warning('a stable solution could not be found (too many attempts)')
   
 end
