@@ -68,7 +68,7 @@ while (nFound < nSolutions)
   % - mean value of the orbit
   % - normalized amplitude
   if ~isempty(p)
-    disp('')
+    [orbitNew, pNew] = orbitTuner(orbitStable);
   end
 
 end
