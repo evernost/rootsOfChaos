@@ -2,7 +2,7 @@
 % Project       : rootsOfChaos
 % Module name   : orbitTuner
 % File name     : orbitTuner.m
-% Purpose       : wiggles around the orbit until it becomes 'interesting'
+% Purpose       : wiggles around the orbit until it satisfies several criterias.
 % Author        : QuBi (nitrogenium@outlook.fr)
 % Creation date : Wednesday, 12 March 2025
 % -----------------------------------------------------------------------------
@@ -21,7 +21,7 @@
 
 function [orbitNew, pNew] = orbitTuner(orbit)
   
-  % Maximum number of stabilisation attempts before giving up
+  % Maximum number of attempts before giving up
   N_TRIES = 500000;
   
   % Number of step length in the random walk
@@ -33,7 +33,6 @@ function [orbitNew, pNew] = orbitTuner(orbit)
   
   orbitSize = length(orbit);
 
-  %condMax = 10^(1.6 + orbitSize/2);  % Empirical, based on study_5.
   condMax = 1e10;
   
   step = logspace(-3,-6,N_STEPS);

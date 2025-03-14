@@ -22,7 +22,7 @@
 function [orbitNew, pNew] = orbitStabilizer(orbit)
   
   % Maximum number of stabilisation attempts before giving up
-  N_TRIES = 500000;
+  N_TRIES = 10000000;
   
   % Number of step length in the random walk
   N_STEPS = 50;
@@ -39,7 +39,7 @@ function [orbitNew, pNew] = orbitStabilizer(orbit)
   eList = zeros(N_TRIES,1);  
   %step = 10.^-(logspace(-1,-5,N_TRIES));
   %step = logspace(-1,-5,N_STEPS);
-  step = logspace(0,-4,N_STEPS);
+  step = logspace(0,-6,N_STEPS);
   stepIndex = 1;
   sMin = Inf;
   for n = 1:N_TRIES    
@@ -49,7 +49,7 @@ function [orbitNew, pNew] = orbitStabilizer(orbit)
     while 1
       orbitTest = orbitNew + step(stepIndex)*(-1+2*rand(1, orbitSize));
       
-      % Detect ill-conditioned orbit
+      % Detect and avoid ill-conditioned orbits
       M = vander(orbitTest);
       condM = cond(M);
       if (condM < condMax)
@@ -59,48 +59,47 @@ function [orbitNew, pNew] = orbitStabilizer(orbit)
         condAcc = condAcc + condM;
       end
       
-      % TODO: if 'I' is the working interval, then p(I) must be contained
-      % in 'I'. Otherwise any slight deviation from the orbit will lead to
-      % infinity.
-      % ...
-
       if (condAttempts > 1000)
         fprintf('[ERROR] Target condition number seems unreachable. You should consider adjust it.\n');
         fprintf('Observed average condition number: %5e (target: %5e)\n', condAcc/condAttempts, condMax);
         error('Condition number failed to converge.')
       end
-      
+
     end
     
     % Solve the polynomial from the candidate orbit
     pTest = orbitSolver(orbitTest);
     
-    % Measure stability
-    s = orbitStability(orbitTest, pTest);
-  
-    if (abs(s) < sMin)
-      
-      % Register the solution
-      orbitNew = orbitTest;
-      pNew = pTest;
-      sMin = abs(s);
-      
-      % Adjust step
-      stepIndex = min(N_STEPS, stepIndex+1);
+    % Check interval invariance
+    invarianceCheck = intervalInvarianceCheck(pTest, orbitTest);
+    if invarianceCheck
 
-      eList(n) = abs(s);
-      fprintf('[INFO] s = %0.5f - step = %0.5f\n', sMin, step(stepIndex))
-      
-      if (abs(s) < 1.0)
-        fprintf('[INFO] Stable solution found!\n')
-        fprintf('- s = %0.5f\n', s)
-        fprintf('- orbit span = %0.3f ... %0.3f\n', min(orbitNew), max(orbitNew))
-        fprintf('- min orbital distance = %0.2f\n', orbitMinDistance(orbitNew))
-        fprintf('- mean = %0.3f\n', mean(orbitNew))
-        fprintf('- cond(M) = %0.2f\n', condM)
-        fprintf('- attempts = %d\n', n)
-        fprintf('\n')
-        return
+      % Measure stability
+      s = orbitStability(orbitTest, pTest);
+    
+      if (abs(s) < sMin)
+        % Register the solution
+        orbitNew = orbitTest;
+        pNew = pTest;
+        sMin = abs(s);
+        
+        % Adjust step
+        stepIndex = min(N_STEPS, stepIndex+1);
+  
+        eList(n) = abs(s);
+        fprintf('[INFO] s = %0.5f - step = %0.5f\n', sMin, step(stepIndex))
+        
+        if (abs(s) < 1.0)
+          fprintf('[INFO] Stable solution found!\n')
+          fprintf('- s = %0.5f\n', s)
+          fprintf('- orbit span = %0.3f ... %0.3f\n', min(orbitNew), max(orbitNew))
+          fprintf('- min orbital distance = %0.2f\n', orbitMinDistance(orbitNew))
+          fprintf('- mean = %0.3f\n', mean(orbitNew))
+          fprintf('- cond(M) = %0.2f\n', condM)
+          fprintf('- attempts = %d\n', n)
+          fprintf('\n')
+          return
+        end
       end
     end
   

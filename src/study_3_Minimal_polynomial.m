@@ -52,13 +52,7 @@ fprintf('[INFO] Looking for solutions...\n');
 while (nFound < nSolutions)
   
   % Draw a random orbit
-  while 1
-    orbit = orbitRange(1) + (orbitRange(2) - orbitRange(1))*rand(1, orbitSize);
-    
-    if (orbitMinDistance(orbit) >= 0.01)
-      break
-    end
-  end
+  orbit = orbitRange(1) + (orbitRange(2) - orbitRange(1))*rand(1, orbitSize);
   
   % Try to find a stable solution 
   [orbitStable, p] = orbitStabilizer(orbit);
