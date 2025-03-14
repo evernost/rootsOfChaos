@@ -41,7 +41,7 @@ In particular, the periodic pattern is quite cool.
 It is pretty easy to observe the period doubling behaviour, which give cycles of period 2, 4, 8, 16, etc. For some other values, periods will be 3, 6, etc.
 
 Then a few questions came to my mind, that I wanted to investigate:
-- can I have have any period I like? What about 51?
+- can I have any period I like? What about 51?
 - since the polynomial of the logistic map does not seem to be *that* special, what about other polynomials?
 - is there a way to classify all the polynomials with a stable cycle of length `n`? do they have anything remarkable, like a specific locus of their roots?
 - is there a *smooth* way to interpolate through the cyclic behaviour? Like a single parameter to go from a 1-cycle, 2-cycle, 3-cycle, etc.? 
@@ -76,7 +76,7 @@ In the first part, I was able to generate any cycle length but that would imply 
 
 The catch in the brutal approach is that it imposes not only the cycle length, but also the cycle itself, which is absolutely overkill. But the degree of freedom is now the orbit of the cycle that I am free to build the way I want.
 
-The order of the polynomial can be huge, but it might be reduced with a carefully-chosen orbit. After all, a 256 cycle of the logistic map may well be a 256-order polynomial, but the trajectory is such that it killed the terms of the polynomial all the way to the second.
+The order of the polynomial can be huge, but it might be reduced with a carefully-chosen orbit. After all, a 256 cycle of the logistic map may well be a 256-order polynomial, it's just that the trajectory is such that it cancelled most of the terms of the polynomial.
 
 - [ ] If there is a polynomial solving a given orbit, is there a *golden* way to tweak the orbit (even slightly) so that there is still a stable solution, and for which there could even be leading terms in the polynomials that get cancelled?
 
@@ -105,13 +105,13 @@ But this also shows that some cycles are actually connected. If improper precisi
 This project does not have any specific goal. I just go with the flow, following what the experiment inspire me.
 
 ## TODO
-- [ ] Do a similar study with piecewise linear recursions (even simpler!)
 - [ ] Find a *right* way to interpolate between polynomials 
 - [ ] Find a *right* way to classify polynomials containing the same cycle length
 - [ ] Define a norm to measure distance between orbits, and make sure an orbit of length N doesn't look *to close* from an orbit of shorter length M < N (use circular correlation?)
 - [ ] Add a 0-mean constraint to the orbits (or close to) to avoid DC component
 - [ ] Add an amplitude constraint to avoid massive jumps when interpolating from one polynomial to the other
 - [ ] On the way to stabilisation/reduction, show how the polynomial (and its roots?) evolves
-- [ ] Find a way to generate bandlimited signal from the periodic patterns of the map
 - [ ] Is there a way to derive orbits of size 2N from orbits of size N? They seem 'close' in a polynomial sense
+- [ ] Do a similar study with piecewise linear recursions (even simpler!)
+- [ ] Find a way to generate bandlimited signal from the periodic patterns of the map
 

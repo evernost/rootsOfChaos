@@ -3,7 +3,7 @@
 % Module name   : orbitStability
 % File name     : orbitStability.m
 % Purpose       : evaluates the stability of an orbit contained in a polynomial
-% Author        : QuBi (nitrogenium@hotmail.com)
+% Author        : QuBi (nitrogenium@outlook.fr)
 % Creation date : Tuesday, 11 March 2025
 % -----------------------------------------------------------------------------
 % Best viewed with space indentation (2 spaces)

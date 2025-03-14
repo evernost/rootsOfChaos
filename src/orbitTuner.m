@@ -3,7 +3,7 @@
 % Module name   : orbitTuner
 % File name     : orbitTuner.m
 % Purpose       : wiggles around the orbit until it becomes 'interesting'
-% Author        : QuBi (nitrogenium@hotmail.com)
+% Author        : QuBi (nitrogenium@outlook.fr)
 % Creation date : Wednesday, 12 March 2025
 % -----------------------------------------------------------------------------
 % Best viewed with space indentation (2 spaces)

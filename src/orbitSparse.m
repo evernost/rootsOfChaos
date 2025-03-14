@@ -3,7 +3,7 @@
 % Module name   : orbitSparse
 % File name     : orbitSparse.m
 % Purpose       : measure orbit degeneration
-% Author        : QuBi (nitrogenium@hotmail.com)
+% Author        : QuBi (nitrogenium@outlook.fr)
 % Creation date : Wednesday, 12 March 2025
 % -----------------------------------------------------------------------------
 % Best viewed with space indentation (2 spaces)
@@ -11,7 +11,7 @@
 %
 % DESCRIPTION
 % Measures the relative weight of the highest coefficients in a polynomial
-% Used to determined how far the input polynomial is from a second
+% Used to determine how far the input polynomial is from a second
 % order polynomial.
 % 
 % Arguments:

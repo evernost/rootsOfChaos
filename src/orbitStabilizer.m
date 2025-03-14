@@ -3,7 +3,7 @@
 % Module name   : orbitStabilizer
 % File name     : orbitStabilizer.m
 % Purpose       : wiggles around the orbit until it becomes stable
-% Author        : QuBi (nitrogenium@hotmail.com)
+% Author        : QuBi (nitrogenium@outlook.fr)
 % Creation date : Tuesday, 11 March 2025
 % -----------------------------------------------------------------------------
 % Best viewed with space indentation (2 spaces)
@@ -59,6 +59,11 @@ function [orbitNew, pNew] = orbitStabilizer(orbit)
         condAcc = condAcc + condM;
       end
       
+      % TODO: if 'I' is the working interval, then p(I) must be contained
+      % in 'I'. Otherwise any slight deviation from the orbit will lead to
+      % infinity.
+      % ...
+
       if (condAttempts > 1000)
         fprintf('[ERROR] Target condition number seems unreachable. You should consider adjust it.\n');
         fprintf('Observed average condition number: %5e (target: %5e)\n', condAcc/condAttempts, condMax);
