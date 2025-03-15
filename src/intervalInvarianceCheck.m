@@ -24,6 +24,9 @@
 % TODO
 %
 
+% TODO: try to specify a target work interval instead of adapting to the orbit
+
+
 function out = intervalInvarianceCheck(p, orbit)
   
   x = linspace(min(orbit), max(orbit), 1000);

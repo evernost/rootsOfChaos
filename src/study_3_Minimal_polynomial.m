@@ -35,7 +35,7 @@ clc
 % -----------------------------------------------------------------------------
 % SETTINGS
 % -----------------------------------------------------------------------------
-orbitSize = 16;   % Target orbit size
+orbitSize = 17;   % Target orbit size
 nSolutions = 5;   % Desired number of solutions
 
 orbitRange = [-2.0 2.0];
@@ -62,11 +62,11 @@ while (nFound < nSolutions)
   % - mean value of the orbit
   % - normalized amplitude
   if ~isempty(p)
-    [orbitNew, pNew] = orbitTuner(orbitStable);
+    [orbitNew, pNew] = orbitFineTune(orbitStable);
   end
 
 end
-  
+
 
 
 % -----------------------------------------------------------------------------

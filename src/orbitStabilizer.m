@@ -71,8 +71,7 @@ function [orbitNew, pNew] = orbitStabilizer(orbit)
     pTest = orbitSolver(orbitTest);
     
     % Check interval invariance
-    invarianceCheck = intervalInvarianceCheck(pTest, orbitTest);
-    if invarianceCheck
+    if intervalInvarianceCheck(pTest, orbitTest)
 
       % Measure stability
       s = orbitStability(orbitTest, pTest);
@@ -101,6 +100,11 @@ function [orbitNew, pNew] = orbitStabilizer(orbit)
           return
         end
       end
+    
+    else
+      % TODO: detect too many failed attempts
+      % 
+    
     end
   
   end
