@@ -72,18 +72,18 @@ end
 % -----------------------------------------------------------------------------
 % REARRANGE SOLUTIONS
 % -----------------------------------------------------------------------------
-% Sort the solutions based on the second leading term
-[~, idx] = sort(pSol(:,2));
-pSolSorted = pSol(idx,:);
-orbitsSorted = orbits(idx,:);
-
-% Force the highest value in the orbit first (using circular shift)
-% This makes the orbit comparison easier
-z = orbits;
-for n = 1:nSolutions
-  [~, maxIdx] = max(orbits(n,:),[],2);
-  z(n,:) = circshift(orbits(n,:), -maxIdx+1,2);
-end
+% % Sort the solutions based on the second leading term
+% [~, idx] = sort(pSol(:,2));
+% pSolSorted = pSol(idx,:);
+% orbitsSorted = orbits(idx,:);
+% 
+% % Force the highest value in the orbit first (using circular shift)
+% % This makes the orbit comparison easier
+% z = orbits;
+% for n = 1:nSolutions
+%   [~, maxIdx] = max(orbits(n,:),[],2);
+%   z(n,:) = circshift(orbits(n,:), -maxIdx+1,2);
+% end
 
 
 

@@ -29,11 +29,35 @@
 
 function out = intervalInvarianceCheck(p, orbit)
   
-  x = linspace(min(orbit), max(orbit), 1000);
+  % Number of points in the analysis grid
+  N_PTS = 1000;
+
+  x = linspace(1.01*min(orbit), 1.01*max(orbit), N_PTS);
   y = polyval(p,x);
 
-  unstableInterval = ((min(y) < 1.2*min(orbit)) || (max(y) > 1.2*max(orbit)));
-
-  out = ~unstableInterval;
+  % Growth tolerance
+  lambda = 1.5;
   
+  if (((min(y)/min(orbit)) < lambda) && ((max(y)/max(orbit)) < lambda))
+    % fprintf('- min: %0.2f (init: %0.2f)\n', min(y), min(orbit));
+    % fprintf('- max: %0.2f (init: %0.2f)\n', max(y), max(orbit));
+    % fprintf('\n');
+    
+    for n = 1:5
+      x = linspace(min(y), max(y), 1000);
+      y = polyval(p,x);
+      %fprintf('new min: %0.2f\n', min(y));
+      %fprintf('new max: %0.2f\n', max(y));
+
+      if ((min(y) < -100) || (max(y) > 100))
+        %fprintf('[INFO] Invariance check failed.\n');
+        out = false;
+        return
+      end
+    end
+
+    out = true;
+  else
+    out = false;
+  end
 end
