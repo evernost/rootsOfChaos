@@ -109,7 +109,8 @@ function [orbitNew, pNew] = orbitFineTune(orbit)
     if (status == -1)
       s = orbitStability(orbitTest, pTest);
     
-      if (abs(s) < 0.7)
+      %if (abs(s) > 0.85) && (abs(s) < 0.99)
+      if (abs(s) < 0.005)
         if (n == 1)
           orbitStats.mean = mean(orbitTest);
           orbitStats.minDist = orbitMinDistance(orbitTest);

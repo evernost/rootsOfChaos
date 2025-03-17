@@ -35,7 +35,7 @@ clc
 % -----------------------------------------------------------------------------
 % SETTINGS
 % -----------------------------------------------------------------------------
-orbitSize = 17;   % Target orbit size
+orbitSize = 12;   % Target orbit size
 nSolutions = 5;   % Desired number of solutions
 
 orbitRange = [-2.0 2.0];
