@@ -22,7 +22,7 @@
 function [orbitNew, pNew] = orbitFineTune(orbit)
   
   % Maximum number of attempts before giving up
-  N_TRIES = 500000;
+  N_TRIES = 1000000;
   
   % Number of different step sizes in the random walk
   N_STEPS = 50;
@@ -49,6 +49,7 @@ function [orbitNew, pNew] = orbitFineTune(orbit)
   orbitStats.mean = 0;
   orbitStats.minDist = 0;
   orbitStats.pScore = 0;
+  orbitStats.sup = Inf;
   orbitStats.p = [];
 
   % Solution finding status
@@ -107,10 +108,9 @@ function [orbitNew, pNew] = orbitFineTune(orbit)
     
     % STEP 3: TEST ORBIT STABILITY
     if (status == -1)
-      s = orbitStability(orbitTest, pTest);
+      [s, sup] = orbitStability(orbitTest, pTest);
     
-      %if (abs(s) > 0.85) && (abs(s) < 0.99)
-      if (abs(s) < 0.005)
+      if (abs(s) < 0.5)
         if (n == 1)
           orbitStats.mean = mean(orbitTest);
           orbitStats.minDist = orbitMinDistance(orbitTest);
@@ -118,18 +118,21 @@ function [orbitNew, pNew] = orbitFineTune(orbit)
           orbitStats.p = pTest;
           
         else
-          if ( (abs(mean(orbitTest)) < abs(orbitStats.mean)) || ...
+          % if ( (abs(mean(orbitTest)) < abs(orbitStats.mean)) || ...
+          %      (orbitMinDistance(orbitTest) > orbitStats.minDist) )
+          if ( (sup < orbitStats.sup) && ...
                (orbitMinDistance(orbitTest) > orbitStats.minDist) )
 
-          
-            fprintf('- s = %0.5f\n', s)
-            fprintf('- min orbital distance = %0.2f\n', orbitMinDistance(orbitNew))
-            fprintf('- mean = %0.3f\n', mean(orbitNew))
+            %fprintf('- s = %0.5f\n', s)
+            fprintf('- sup = %0.5f\n', sup)
+            %fprintf('- min orbital distance = %0.2f\n', orbitMinDistance(orbitNew))
+            %fprintf('- mean = %0.3f\n', mean(orbitNew))
             
             orbitStats.mean = mean(orbitTest);
             orbitStats.minDist = orbitMinDistance(orbitTest);
             orbitStats.pScore = orbitSparse(pTest);
             orbitStats.p = [orbitStats.p; pTest];
+            orbitStats.sup = sup;
             
             orbitNew = orbitTest;
             pNew = pTest;
@@ -139,6 +142,18 @@ function [orbitNew, pNew] = orbitFineTune(orbit)
         orbitStats.solutionCount = orbitStats.solutionCount + 1;
       end
     end
+  end
+
+  disp('pouet')
+  x = linspace(-2.0,2.0,1000);
+  for n = 1:size(orbitStats.p,1)
+    y = polyval(orbitStats.p(n,:),x);
+    plot(x,y)
+
+    ylim([-5.0 5.0])
+    grid minor
+
+    pause(0.01)
   end
 
 end

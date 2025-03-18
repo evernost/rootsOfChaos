@@ -25,7 +25,7 @@
 % TODO
 %
 
-function s = orbitStability(orbit, p)
+function [s, sup] = orbitStability(orbit, p)
   
   orbitSize = length(orbit);
   
@@ -35,10 +35,17 @@ function s = orbitStability(orbit, p)
   dp = ((orbitSize-1):-1:1) .* p(1:(end-1));
   
   s = 1;
+  sup = 0;
   for m = 1:orbitSize
-    s = s*polyval(dp, orbit(m));
-    % if abs(s) > 100
-    %   break
+    mul = polyval(dp, orbit(m));
+
+    sup = sup + abs(mul);
+
+    % if (abs(mul) > sup)
+    %   sup = abs(mul);
     % end
+
+
+    s = s*mul;
   end
 end

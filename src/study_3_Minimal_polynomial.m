@@ -35,7 +35,7 @@ clc
 % -----------------------------------------------------------------------------
 % SETTINGS
 % -----------------------------------------------------------------------------
-orbitSize = 12;   % Target orbit size
+orbitSize = 13;   % Target orbit size
 nSolutions = 5;   % Desired number of solutions
 
 orbitRange = [-2.0 2.0];
@@ -65,6 +65,9 @@ while (nFound < nSolutions)
     [orbitNew, pNew] = orbitFineTune(orbitStable);
   end
 
+  nFound = nFound + 1;
+  pSol(nFound, :) = pNew;
+  orbits(nFound, :) = orbitNew;
 end
 
 
