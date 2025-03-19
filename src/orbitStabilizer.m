@@ -42,6 +42,9 @@ function [orbitNew, pNew] = orbitStabilizer(orbit)
   step = logspace(0,-6,N_STEPS);
   stepIndex = 1;
   sMin = Inf;
+
+  bestBounds = [-1000,1000];
+
   for n = 1:N_TRIES    
     
     % Tune the orbit a bit, but keep it well defined
@@ -71,7 +74,14 @@ function [orbitNew, pNew] = orbitStabilizer(orbit)
     pTest = orbitSolver(orbitTest);
     
     % Check interval invariance
-    if intervalInvarianceCheck(pTest, orbitTest)
+    [invarTest, bounds] = intervalInvarianceCheck(pTest, orbitTest);
+
+    if (bounds(2) - bounds(1)) < (bestBounds(2) - bestBounds(1))
+      bestBounds = bounds;
+      disp(bestBounds)
+    end
+
+    if invarTest
 
       % Measure stability
       s = orbitStability(orbitTest, pTest);

@@ -27,25 +27,27 @@
 % TODO: try to specify a target work interval instead of adapting to the orbit
 
 
-function out = intervalInvarianceCheck(p, orbit)
+function [out, bounds] = intervalInvarianceCheck(p, orbit)
   
   % Number of points in the analysis grid
   N_PTS = 1000;
 
   x = linspace(1.01*min(orbit), 1.01*max(orbit), N_PTS);
+  %x = linspace(min(orbit), max(orbit), N_PTS);
 
-  for n = 1:5
+  %for n = 1:5
     y = polyval(p,x);
 
     if ((min(y) < -100) || (max(y) > 100))
-      %fprintf('[INFO] Invariance check failed.\n');
       out = false;
+      bounds = [min(y), max(y)];
       return
-    else
-      x = linspace(min(y), max(y), 1000);
+    %else
+      %x = linspace(min(y), max(y), 1000);
     end
-  end
+  %end
 
-  out = true;
+  bounds = [min(y), max(y)];
+  out = false;
   
 end

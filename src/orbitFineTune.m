@@ -41,7 +41,7 @@ function [orbitNew, pNew] = orbitFineTune(orbit)
   pNew = [];
   
   % Initialise step sizes
-  step = logspace(-3,-6,N_STEPS);
+  step = logspace(-1,-6,N_STEPS);
   stepIndex = 1;
 
   % Initialise statistics
@@ -153,7 +153,7 @@ function [orbitNew, pNew] = orbitFineTune(orbit)
     ylim([-5.0 5.0])
     grid minor
 
-    pause(0.01)
+    pause(0.1)
   end
 
 end
