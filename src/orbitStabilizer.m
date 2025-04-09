@@ -37,15 +37,11 @@ function [orbitNew, pNew] = orbitStabilizer(orbit)
   condMax = 1e10;
 
   eList = zeros(N_TRIES,1);  
-  %step = 10.^-(logspace(-1,-5,N_TRIES));
-  %step = logspace(-1,-5,N_STEPS);
   step = logspace(0,-6,N_STEPS);
   stepIndex = 1;
   sMin = Inf;
 
-  bestBounds = [-1000,1000];
-
-  for n = 1:N_TRIES    
+  for n = 1:N_TRIES
     
     % Tune the orbit a bit, but keep it well defined
     condAttempts = 0; condAcc = 0;
@@ -74,20 +70,15 @@ function [orbitNew, pNew] = orbitStabilizer(orbit)
     pTest = orbitSolver(orbitTest);
     
     % Check interval invariance
-    [invarTest, bounds] = intervalInvarianceCheck(pTest, orbitTest);
-
-    if (bounds(2) - bounds(1)) < (bestBounds(2) - bestBounds(1))
-      bestBounds = bounds;
-      disp(bestBounds)
-    end
+    [invarTest, ~] = intervalInvarianceCheck(pTest, orbitTest);
 
     if invarTest
 
       % Measure stability
       s = orbitStability(orbitTest, pTest);
     
+      % Register the solution if it has a better stability score
       if (abs(s) < sMin)
-        % Register the solution
         orbitNew = orbitTest;
         pNew = pTest;
         sMin = abs(s);
@@ -109,12 +100,7 @@ function [orbitNew, pNew] = orbitStabilizer(orbit)
           fprintf('\n')
           return
         end
-      end
-    
-    else
-      % TODO: detect too many failed attempts
-      % 
-    
+      end    
     end
   
   end

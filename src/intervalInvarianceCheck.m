@@ -24,30 +24,34 @@
 % TODO
 %
 
-% TODO: try to specify a target work interval instead of adapting to the orbit
 
 
-function [out, bounds] = intervalInvarianceCheck(p, orbit)
+function [testResult, bounds] = intervalInvarianceCheck(p, orbit)
   
   % Number of points in the analysis grid
   N_PTS = 1000;
 
-  x = linspace(1.01*min(orbit), 1.01*max(orbit), N_PTS);
-  %x = linspace(min(orbit), max(orbit), N_PTS);
+  % Define the interval 'I' (here: the minimal segment containing the orbit +5%)
+  x = linspace(1.05*min(orbit), 1.05*max(orbit), N_PTS);
 
-  %for n = 1:5
+  % Iterate a few times on 'I'
+  for n = 1:5
     y = polyval(p,x);
+    
+    if (n == 1)
+      bounds = [min(y), max(y)];
+    end
 
     if ((min(y) < -100) || (max(y) > 100))
-      out = false;
-      bounds = [min(y), max(y)];
+      testResult = false;
       return
-    %else
-      %x = linspace(min(y), max(y), 1000);
     end
-  %end
+    
+    x = linspace(min(y), max(y), N_PTS);
+  end
 
+  % Iteration did not seem to blow up
   bounds = [min(y), max(y)];
-  out = false;
-  
+  testResult = true;
 end
+

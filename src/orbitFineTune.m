@@ -108,7 +108,8 @@ function [orbitNew, pNew] = orbitFineTune(orbit)
     
     % STEP 3: TEST ORBIT STABILITY
     if (status == -1)
-      [s, sup] = orbitStability(orbitTest, pTest);
+      [s, derivVect] = orbitStability(orbitTest, pTest);
+      sup = norm(derivVect,1);
     
       if (abs(s) < 0.5)
         if (n == 1)

@@ -35,10 +35,10 @@ clc
 % -----------------------------------------------------------------------------
 % SETTINGS
 % -----------------------------------------------------------------------------
-orbitSize = 15;   % Target orbit size
+orbitSize = 11;   % Target orbit size
 nSolutions = 5;   % Desired number of solutions
 
-orbitRange = [-3.0, 3.0];
+orbitRange = [-2.5, 2.5];
 
 
 
@@ -48,20 +48,20 @@ orbitRange = [-3.0, 3.0];
 nFound = 0;
 orbits = zeros(nSolutions, orbitSize);
 pSol = zeros(nSolutions, orbitSize);
-fprintf('[INFO] Looking for solutions...\n');
+
 while (nFound < nSolutions)
   
   % Draw a random orbit
+  fprintf('[STEP 1] Draw a random orbit\n');
   orbit = orbitRange(1) + (orbitRange(2) - orbitRange(1))*rand(1, orbitSize);
   
   % Try to find a stable solution 
+  fprintf('[STEP 2] Tune the orbit for stability and invariance\n');
   [orbitStable, p] = orbitStabilizer(orbit);
 
-  % Optimize the polynomial in terms of:
-  % - order (for eventual high order quantization)
-  % - mean value of the orbit
-  % - normalized amplitude
+  % Optimize the polynomial for better convergence
   if ~isempty(p)
+    fprintf('[STEP 3] Fine tune the orbit for better convergence\n');
     [orbitNew, pNew] = orbitFineTune(orbitStable);
   end
 
