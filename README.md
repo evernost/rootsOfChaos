@@ -1,5 +1,13 @@
 # rootsOfChaos
-A study on polynomial recursions, the root locus of specific polynomials, and their link with chaos in recurrent maps.
+A study on polynomial recursions:
+
+$u_{n+1} = p(u_{n})$
+
+Where `p` is a polynomial.<br>
+
+How much can we control the behavior of the sequence if `p` is carefully chosen? (single fixed point, 3-cycle, 4-cycle, N-cycle etc.)
+
+How do the roots of `p` affect the sequence? 
 
 ## The goal
 Non-linear recursions can have **periodic** behaviours. 
