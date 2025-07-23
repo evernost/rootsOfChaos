@@ -1,13 +1,13 @@
 # rootsOfChaos
-A study on polynomial recursions:
+A study on polynomial recursions *i.e.* sequences of general term $u_{n}$ such that:
 
 $u_{n+1} = p(u_{n})$
 
-Where `p` is a polynomial.<br>
+where `p` is a polynomial.<br>
 
-How much can we control the behavior of the sequence if `p` is carefully chosen? (single fixed point, 3-cycle, 4-cycle, N-cycle etc.)
+__Question__: how much can we control the behavior of the sequence (single fixed point, 3-cycle, 4-cycle, N-cycle etc.) if `p` is carefully chosen?
 
-How do the roots of `p` affect the sequence? 
+Is there a link between the roots of `p` and the way the sequence behaves? 
 
 ## The goal
 Non-linear recursions can have **periodic** behaviours. 
