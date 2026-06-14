@@ -2,6 +2,7 @@ import numpy as np
 
 def search(
   order         : int,
+  length        : int,
   x             : float,
   s             : float,
   coef_bounds   : tuple[float, float] = (-1.0, 1.0),
@@ -15,6 +16,7 @@ def search(
 
   Args:
     order:          Polynomial order
+    length:         Length of the orbit
     x:              Evaluation point
     s:              Wiggle scale factor
     coef_bounds:    (low, high) for initial coefficient sampling.
@@ -33,36 +35,71 @@ def search(
   # Draw random coefficients [a_0, a_1, ..., a_n]
   coeffs = rng.uniform(low_c, high_c, size = order + 1)
 
-  # Pre-compute powers of x once: [x^0, x^1, ..., x^n]
-  xPows = x ** np.arange(order + 1)
-
-  # Evaluate |P(x)-x|
-  d = np.abs((coeffs @ xPows) - x)
+  u = x
+  for _ in range(length) :
+    u = P(u, coeffs)
+  err = np.abs(u - x)
 
   for i in range(n_iterations) :
 
-    # Choose a wiggle
+    # Wiggle the coefficients
     wiggles = rng.uniform(low_w, high_w, size = order + 1)
     coeffsNew = coeffs + (s * wiggles)
 
-    dNew = np.abs((coeffsNew @ xPows) - x)
+    u = x
+    dMin = 100; dMax = -1
+    orbit = [float(u)]
+    for _ in range(length) :
+      uNew = P(u, coeffsNew)
 
-    if (dNew < d) :
-      coeffs = coeffsNew
-      d = dNew
-      print(f"New solution: d = {dNew}")
+      d = np.abs(uNew-u)
 
+      if (d < dMin) :
+        dMin = d
+
+      if (d > dMax) :
+        dMax = d
+
+      u = uNew
+      orbit.append(float(u))
+      
+    errNew = np.abs(u - x)
+
+    if ((errNew < err) and (dMin > 0.2)) :
+      coeffs  = coeffsNew
+      err     = errNew
+      print(f"* Attempt #{i}: Loop error = {errNew:0.5f}, orbit distance = [{dMin:0.5f}, {dMax:0.5f}]")
+      print(f"  orbit = {orbit}")
+      print("")
+      # print(f"  coeffs = {coeffs}")
 
   return coeffs
 
 
+
+def P(x, coeffs) :
+  xPows = x ** np.arange(len(coeffs))
+  y = coeffs @ xPows
+  return y
+
+
+
 if __name__ == "__main__" :
-  vals = search(
+
+  coeffs = search(
     order = 3,
-    x = -0.2,
-    s = 0.1,
-    coef_bounds = (-1.0, 1.0),
+    length = 3,
+    x = 0.1,
+    s = 0.01,
+    coef_bounds = (-5.0, 5.0),
     wiggle_bounds = (-1.0, 1.0),
-    n_iterations = 1000,
-    seed = 42,
+    n_iterations = 100000
   )
+
+  # u = -0.2
+  # for _ in range(10) :
+  #   for _ in range(7) :
+  #     u = P(u, coeffs)
+
+  #   print(f"x = {u}")
+
