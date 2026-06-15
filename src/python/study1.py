@@ -32,7 +32,8 @@ def search(
   (low_c, high_c) = coef_bounds
   (low_w, high_w) = wiggle_bounds
 
-  # Draw random coefficients [a_0, a_1, ..., a_n]
+  # Draw random values for the polynomial's coefficients 
+  # Array convention: [a_0, a_1, ..., a_n]
   coeffs = rng.uniform(low_c, high_c, size = order + 1)
 
   u = x
@@ -46,9 +47,13 @@ def search(
     wiggles = rng.uniform(low_w, high_w, size = order + 1)
     coeffsNew = coeffs + (s * wiggles)
 
+    # Determine the coefficients of P' (for orbit stability assessment)
+    coeffsDeriv  = (np.arange(len(coeffs)) * coeffsNew)[1:]
+
     u = x
     dMin = 100; dMax = -1
     orbit = [float(u)]
+    stability = 1
     for _ in range(length) :
       uNew = P(u, coeffsNew)
 
@@ -73,6 +78,13 @@ def search(
       print("")
       # print(f"  coeffs = {coeffs}")
 
+  if (err > 0.01) :
+    print("Failed to converge.")
+  else :
+    print("Success!")
+  
+  # print(f"Seed used = {rng.bit_generator.state['state']['state']}")
+
   return coeffs
 
 
@@ -86,20 +98,25 @@ def P(x, coeffs) :
 
 if __name__ == "__main__" :
 
+  L = 3
+  x0 = 0.1
+
   coeffs = search(
-    order = 3,
-    length = 3,
-    x = 0.1,
-    s = 0.01,
-    coef_bounds = (-5.0, 5.0),
+    order = 5,
+    length = L,
+    x = x0,
+    s = 0.03,
+    coef_bounds = (-3.0, 3.0),
     wiggle_bounds = (-1.0, 1.0),
-    n_iterations = 100000
+    n_iterations = 200000,
+    seed = 41
   )
 
-  # u = -0.2
-  # for _ in range(10) :
-  #   for _ in range(7) :
-  #     u = P(u, coeffs)
+  # Stability check (orbit multiple times)
+  u = x0
+  for _ in range(3) :
+    for _ in range(L) :
+      u = P(u, coeffs)
 
-  #   print(f"x = {u}")
+    print(f"x = {u}")
 
