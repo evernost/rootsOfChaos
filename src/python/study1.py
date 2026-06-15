@@ -16,7 +16,7 @@ def search(
 
   Args:
     order:          Polynomial order
-    length:         Length of the orbit
+    length:         Requested length of the orbit
     x:              Evaluation point
     s:              Wiggle scale factor
     coef_bounds:    (low, high) for initial coefficient sampling.
@@ -38,8 +38,12 @@ def search(
 
   u = x
   for _ in range(length) :
-    u = P(u, coeffs)
+    u = poly(u, coeffs)
   err = np.abs(u - x)
+
+  # TODO: regenerate 'coeffs' if err is way too high
+  # The coefficients are too far.
+
 
   for i in range(n_iterations) :
 
@@ -48,14 +52,16 @@ def search(
     coeffsNew = coeffs + (s * wiggles)
 
     # Determine the coefficients of P' (for orbit stability assessment)
-    coeffsDeriv  = (np.arange(len(coeffs)) * coeffsNew)[1:]
+    coeffsDerivNew  = (np.arange(len(coeffs)) * coeffsNew)[1:]
 
+    # Calculate the orbit
     u = x
     dMin = 100; dMax = -1
     orbit = [float(u)]
-    stability = 1
+    stability = poly(u, coeffsDerivNew)
     for _ in range(length) :
-      uNew = P(u, coeffsNew)
+      uNew = poly(u, coeffsNew)
+      stability *= poly(u, coeffsDerivNew)
 
       d = np.abs(uNew-u)
 
@@ -70,10 +76,11 @@ def search(
       
     errNew = np.abs(u - x)
 
-    if ((errNew < err) and (dMin > 0.2)) :
+    # Accept/Reject the wiggle applied on the coefficients
+    if ((errNew < err) and (dMin > 0.1) and (np.abs(stability) < 1.0)) :
       coeffs  = coeffsNew
       err     = errNew
-      print(f"* Attempt #{i}: Loop error = {errNew:0.5f}, orbit distance = [{dMin:0.5f}, {dMax:0.5f}]")
+      print(f"* Attempt #{i}: Loop error = {errNew:0.5f}, Orbit span = [{dMin:0.5f}, {dMax:0.5f}], Stability = {stability}")
       print(f"  orbit = {orbit}")
       print("")
       # print(f"  coeffs = {coeffs}")
@@ -83,20 +90,20 @@ def search(
   else :
     print("Success!")
   
-  # print(f"Seed used = {rng.bit_generator.state['state']['state']}")
+
 
   return coeffs
 
 
 
-def P(x, coeffs) :
+def poly(x, coeffs) :
   xPows = x ** np.arange(len(coeffs))
   y = coeffs @ xPows
   return y
 
 
 
-if __name__ == "__main__" :
+if (__name__ == "__main__") :
 
   L = 3
   x0 = 0.1
@@ -108,15 +115,15 @@ if __name__ == "__main__" :
     s = 0.03,
     coef_bounds = (-3.0, 3.0),
     wiggle_bounds = (-1.0, 1.0),
-    n_iterations = 200000,
+    n_iterations = 500000,
     seed = 41
   )
 
   # Stability check (orbit multiple times)
   u = x0
-  for _ in range(3) :
+  for _ in range(5) :
     for _ in range(L) :
-      u = P(u, coeffs)
+      u = poly(u, coeffs)
 
     print(f"x = {u}")
 
