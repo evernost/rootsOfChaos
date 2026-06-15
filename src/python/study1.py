@@ -27,23 +27,35 @@ def search(
   Returns:
     Array of shape (n_iterations,) with P(x) at each step.
   """
-
+  
   rng = np.random.default_rng(seed)
-  (low_c, high_c) = coef_bounds
-  (low_w, high_w) = wiggle_bounds
 
-  # Draw random values for the polynomial's coefficients 
-  # Array convention: [a_0, a_1, ..., a_n]
-  coeffs = rng.uniform(low_c, high_c, size = order + 1)
+  while True :
+    
+    (low_c, high_c) = coef_bounds
+    (low_w, high_w) = wiggle_bounds
 
-  u = x
-  for _ in range(length) :
-    u = poly(u, coeffs)
-  err = np.abs(u - x)
+    # Draw random values for the polynomial's coefficients 
+    # Array convention: [a_0, a_1, ..., a_n]
+    coeffs = rng.uniform(low_c, high_c, size = order + 1)
 
-  # TODO: regenerate 'coeffs' if err is way too high
-  # The coefficients are too far.
+    u = x
+    valid = True
+    for _ in range(length) :
+      u = poly(u, coeffs)
 
+      if (np.abs(u) > 100) :
+        valid = False
+        break
+
+    if valid :
+      err = np.abs(u - x)
+      print(f"A decent solution was found. err = {err}")
+      break
+    else :
+      print(f"u = {u}")
+
+      
 
   for i in range(n_iterations) :
 
@@ -105,18 +117,18 @@ def poly(x, coeffs) :
 
 if (__name__ == "__main__") :
 
-  L = 3
-  x0 = 0.1
+  L = 5
+  x0 = -0.7
 
   coeffs = search(
-    order = 5,
+    order = 7,
     length = L,
     x = x0,
-    s = 0.03,
-    coef_bounds = (-3.0, 3.0),
+    s = 0.01,
+    coef_bounds = (-5.0, 5.0),
     wiggle_bounds = (-1.0, 1.0),
     n_iterations = 500000,
-    seed = 41
+    seed = 42
   )
 
   # Stability check (orbit multiple times)
