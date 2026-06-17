@@ -12,12 +12,12 @@ def search(
 ) -> np.ndarray :
   
   """
-  Repeatedly evaluates a wiggled polynomial at x.
+  Looks for a polynomial containing a stable orbit of a given length.
 
   Args:
     order:          Polynomial order
-    length:         Requested length of the orbit
-    x:              Evaluation point
+    length:         Length of the orbit
+    x:              Start point of the orbit
     s:              Wiggle scale factor
     coef_bounds:    (low, high) for initial coefficient sampling.
     wiggle_bounds:  (low, high) for per-step wiggle sampling.
@@ -25,21 +25,24 @@ def search(
     seed:           Optional RNG seed for reproducibility.
 
   Returns:
-    Array of shape (n_iterations,) with P(x) at each step.
+    Coefficients of the polynomial (list)
   """
   
+  # Initialise the random generator
   rng = np.random.default_rng(seed)
 
+  (low_c, high_c) = coef_bounds
+  (low_w, high_w) = wiggle_bounds
+
+  # STEP 1: find a polynomial candidate 
   while True :
     
-    (low_c, high_c) = coef_bounds
-    (low_w, high_w) = wiggle_bounds
-
     # Draw random values for the polynomial's coefficients 
     # Array convention: [a_0, a_1, ..., a_n]
     coeffs = rng.uniform(low_c, high_c, size = order + 1)
 
-    u = x
+    # Iterate the polynomial
+    u     = x
     valid = True
     for _ in range(length) :
       u = poly(u, coeffs)
@@ -50,10 +53,11 @@ def search(
 
     if valid :
       err = np.abs(u - x)
-      print(f"A decent solution was found. err = {err}")
+      print(f"Potential polynomial found, loop error = {err:.2f}")
+
       break
     else :
-      print(f"u = {u}")
+      print(f"Discarding polynomial (P(x) = {u:.2f})")
 
       
 
@@ -117,11 +121,11 @@ def poly(x, coeffs) :
 
 if (__name__ == "__main__") :
 
-  L = 5
-  x0 = -0.7
+  L = 3
+  x0 = 0.4
 
   coeffs = search(
-    order = 7,
+    order = 9,
     length = L,
     x = x0,
     s = 0.01,
@@ -134,8 +138,13 @@ if (__name__ == "__main__") :
   # Stability check (orbit multiple times)
   u = x0
   for _ in range(5) :
-    for _ in range(L) :
+    for i in range(L) :
       u = poly(u, coeffs)
+      
+      if i == (L-1) :
+        print(f"{u:0.2f}")
+      else :
+        print(f"{u:0.2f} -> ", end = "")
 
     print(f"x = {u}")
 
